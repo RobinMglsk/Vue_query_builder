@@ -1,28 +1,48 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <QueryBuilder v-model="value" v-bind:fields="fields"/>
+    
+    <pre class="mt-3">{{value}}</pre>
   </div>
 </template>
+<style>
+#app {
+  margin: 25px;
+}
+pre {
+  background: whitesmoke;
+  border: 1px solid lightgray;
+  padding: 25px;
+}
+</style>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import QueryBuilder from './components/QueryBuilder.vue';
 
 export default {
   name: 'app',
   components: {
-    HelloWorld
+    QueryBuilder
+  },
+  data() {
+    return {
+      value: {
+        type: 'AND',
+        rules: [
+          { field: 'firstName', value: 'R%', operator: 'LIKE' },
+          { field: 'firstName', value: 'Roobin', operator: '!=' },
+          { field: 'id', value: 'Roobin', operator: '!=' },
+          { field: 'attended', value: false, operator: '=' },
+          { field: 'car', value: 'mercedes', operator: '=' }
+        ]
+      },
+      fields: {
+        id: { type: 'INTEGER' },
+        firstName: { type: 'STRING' },
+        attended: { type: 'BOOLEAN' },
+        car: { type: 'LIST', options: ['mercedes', 'audi'] }
+      }
+    };
   }
-}
+};
 </script>
-
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
