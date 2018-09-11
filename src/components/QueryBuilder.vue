@@ -24,7 +24,7 @@
                 </div>
                 <div class="col-sm-9">
                   <select v-model="addField" class="form-control">
-                    <option v-for="(field, index) in fields" v-value="index" v-bind:key="index">{{index}}</option>
+                    <option v-for="(field, index) in fields" v-bind:value="index" v-bind:key="index">{{index}}</option>
                   </select>
                 </div>
               </div>
@@ -35,8 +35,8 @@
           
           
 
-
-          <div v-for="(rule, index) in value.rules" v-bind:key="index">
+          
+          <div v-if="loaded" v-for="(rule, index) in value.rules" v-bind:key="index">
             
             <!-- Type: STRING -->
             <div v-if="fields[rule.field].type == 'STRING'" class="type-sting form-group row">
@@ -114,6 +114,7 @@
             </div>
             
           </div>
+          <div v-else class="text-center">Loading...</div>
           
         </div>
       </div>
@@ -150,6 +151,17 @@ export default {
       },
       addField: null
     };
+  },
+  computed: {
+    loaded() {
+      if (
+        Object.keys(this.value).length !== 0 &&
+        Object.keys(this.fields).length !== 0
+      ) {
+        return true;
+      }
+      return false;
+    }
   },
   methods: {
     addRule(level) {
