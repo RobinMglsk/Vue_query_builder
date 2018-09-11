@@ -1,11 +1,12 @@
 {
   "name": "vue_query_builder",
+  "main": "./dist/QueryBuilder.common.js",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve --open",
     "build": "vue-cli-service build",
-    "build-bundel": "vue-cli-service build --target lib --name queryBuilder ./src/components/index.js",
+    "build-bundel": "vue-cli-service build --target lib --name QueryBuilder ./src/components/QueryBuilder.vue",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
