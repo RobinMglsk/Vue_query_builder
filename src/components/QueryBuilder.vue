@@ -19,13 +19,14 @@
           
             <div class="col-md-5 offset-md-1">
               <div class="form-group row">
-                <div class="col-sm-3">
-                  <button class="btn btn btn-default btn-block mb-2" v-on:click="addRule(0)" v-bind:disabled="addField == null">Add rule</button>
-                </div>
+                
                 <div class="col-sm-9">
                   <select v-model="addField" class="form-control">
-                    <option v-for="(field, index) in fields" v-bind:value="index" v-bind:key="index">{{index}}</option>
+                    <option v-for="(field, index) in fields" v-bind:value="index" v-bind:key="index">{{getFieldName(field, index)}}</option>
                   </select>
+                </div>
+                <div class="col-sm-3">
+                  <button class="btn btn btn-primary btn-block mb-2" v-on:click="addRule(0)" v-bind:disabled="addField == null">Add</button>
                 </div>
               </div>
             </div>
@@ -40,8 +41,8 @@
             
             <!-- Type: STRING -->
             <div v-if="fields[rule.field].type == 'STRING'" class="type-sting form-group row">
-              <label v-bind:for="index" class="col-10 col-sm-2 col-form-label">{{rule.field}}</label>
-              <div class="col-2 col-sm-1"><button class="remove" v-on:click="removeRule(index)">×</button></div>
+              <label v-bind:for="index" class="col-10 col-sm-2 col-form-label">{{ getRuleName(rule) }}</label>
+              <div class="col-2 col-sm-1"><button class="btn btn-outline-danger remove" v-on:click="removeRule(index)">×</button></div>
               <div class="col-sm-2">
                 <select class="form-control mb-2" v-model="rule.operator">
                   <option v-for="option in operators.STRING" v-bind:value="option" v-bind:key="option">{{option}}</option>
@@ -54,8 +55,8 @@
 
             <!-- Type: INTEGER -->
             <div v-else-if="fields[rule.field].type == 'INTEGER'" class="type-integer form-group row">
-              <label v-bind:for="index" class="col-10 col-sm-2 col-form-label">{{rule.field}}</label>
-              <div class="col-2 col-sm-1"><button class="remove" v-on:click="removeRule(index)">×</button></div>
+              <label v-bind:for="index" class="col-10 col-sm-2 col-form-label">{{ getRuleName(rule) }}</label>
+              <div class="col-2 col-sm-1"><button class="btn btn-outline-danger remove" v-on:click="removeRule(index)">×</button></div>
               <div class="col-sm-2">
                 <select class="form-control mb-2" v-model="rule.operator">
                   <option v-for="option in operators.INTEGER" v-bind:value="option" v-bind:key="option">{{option}}</option>
@@ -68,8 +69,8 @@
 
             <!-- Type: BOOLEAN -->
             <div v-else-if="fields[rule.field].type == 'BOOLEAN'" class="type-sting form-group row">
-              <label v-bind:for="index" class="col-10 col-sm-2 col-form-label">{{rule.field}}</label>
-              <div class="col-2 col-sm-1"><button class="remove" v-on:click="removeRule(index)">×</button></div>
+              <label v-bind:for="index" class="col-10 col-sm-2 col-form-label">{{ getRuleName(rule) }}</label>
+              <div class="col-2 col-sm-1"><button class="btn btn-outline-danger remove" v-on:click="removeRule(index)">×</button></div>
               <div class="col-sm-2">
                 <select class="form-control mb-2" v-model="rule.operator">
                   <option v-for="option in operators.BOOLEAN" v-bind:value="option" v-bind:key="option">{{option}}</option>
@@ -85,8 +86,8 @@
 
             <!-- Type: LIST -->
             <div v-else-if="fields[rule.field].type == 'LIST'" class="type-sting form-group row">
-              <label v-bind:for="index" class="col-10 col-sm-2 col-form-label">{{rule.field}}</label>
-              <div class="col-2 col-sm-1"><button class="remove" v-on:click="removeRule(index)">×</button></div>
+              <label v-bind:for="index" class="col-10 col-sm-2 col-form-label">{{ getRuleName(rule) }}</label>
+              <div class="col-2 col-sm-1"><button class="btn btn-outline-danger remove" v-on:click="removeRule(index)">×</button></div>
               <div class="col-sm-2">
                 <select class="form-control mb-2" v-model="rule.operator">
                   <option v-for="option in operators.LIST" v-bind:value="option" v-bind:key="option">{{option}}</option>
@@ -99,10 +100,10 @@
               </div>
             </div>
 
-            <!-- Type: STRING -->
+            <!-- Type: DEFAULT -->
             <div v-else class="type-default form-group row">
-              <label v-bind:for="index" class="col-10 col-sm-2 col-form-label">{{rule.field}}</label>
-              <div class="col-2 col-sm-1"><button class="remove" v-on:click="removeRule(index)">×</button></div>
+              <label v-bind:for="index" class="col-10 col-sm-2 col-form-label">{{ getRuleName(rule) }}</label>
+              <div class="col-2 col-sm-1"><button class="btn btn-outline-danger remove" v-on:click="removeRule(index)">×</button></div>
               <div class="col-sm-2">
                 <select class="form-control mb-2" v-model="rule.operator">
                   <option v-for="option in operators.DEFAULT" v-bind:value="option" v-bind:key="option">{{option}}</option>
@@ -123,10 +124,17 @@
 
   </div>
 </template>
-<style>
+
+<style lang="scss">
 label,
 option {
   text-transform: capitalize;
+}
+button.remove {
+  border: none;
+  background: transparent;
+  text-align: center;
+  min-width: 100%;
 }
 </style>
 
@@ -164,6 +172,24 @@ export default {
     }
   },
   methods: {
+    getRuleName(rule) {
+      if (
+        this.fields[rule.field].name !== undefined &&
+        this.fields[rule.field].name !== ''
+      ) {
+        return this.fields[rule.field].name;
+      } else {
+        return rule.field;
+      }
+    },
+
+    getFieldName(field, index) {
+      if (field.name !== undefined && field.name !== '') {
+        return field.name;
+      } else {
+        return index;
+      }
+    },
     addRule(level) {
       if (level == 0) {
         this.value.rules.push({
@@ -175,7 +201,7 @@ export default {
       return;
     },
     removeRule(rule) {
-      window.console.log(rule);
+      this.value.rules.splice(rule, 1);
       return;
     }
   }
