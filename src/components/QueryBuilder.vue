@@ -44,12 +44,12 @@
               <label v-bind:for="index" class="col-10 col-sm-2 col-form-label">{{ getRuleName(rule) }}</label>
               <div class="col-2 col-sm-1"><button class="btn btn-outline-danger remove" v-on:click="removeRule(index)">×</button></div>
               <div class="col-sm-2">
-                <select class="form-control mb-2" v-model="rule.operator">
+                <select class="form-control mb-2" v-model="rule.operator" v-on:change="$emit('change')">
                   <option v-for="option in operators.STRING" v-bind:value="option" v-bind:key="option">{{option}}</option>
                 </select>
               </div>
               <div class="col-sm-7">
-                <input type="text" class="form-control" v-bind:id="index" v-model="rule.value">
+                <input type="text" class="form-control" v-bind:id="index" v-model="rule.value" v-on:change="$emit('change')">
               </div>
             </div>
 
@@ -58,12 +58,12 @@
               <label v-bind:for="index" class="col-10 col-sm-2 col-form-label">{{ getRuleName(rule) }}</label>
               <div class="col-2 col-sm-1"><button class="btn btn-outline-danger remove" v-on:click="removeRule(index)">×</button></div>
               <div class="col-sm-2">
-                <select class="form-control mb-2" v-model="rule.operator">
+                <select class="form-control mb-2" v-model="rule.operator" v-on:change="$emit('change')">
                   <option v-for="option in operators.INTEGER" v-bind:value="option" v-bind:key="option">{{option}}</option>
                 </select>
               </div>
               <div class="col-sm-7">
-                <input type="number" class="form-control" v-bind:id="index" v-model="rule.value">
+                <input type="number" class="form-control" v-bind:id="index" v-model="rule.value" v-on:change="$emit('change')">
               </div>
             </div>
 
@@ -72,12 +72,12 @@
               <label v-bind:for="index" class="col-10 col-sm-2 col-form-label">{{ getRuleName(rule) }}</label>
               <div class="col-2 col-sm-1"><button class="btn btn-outline-danger remove" v-on:click="removeRule(index)">×</button></div>
               <div class="col-sm-2">
-                <select class="form-control mb-2" v-model="rule.operator">
+                <select class="form-control mb-2" v-model="rule.operator" v-on:change="$emit('change')">
                   <option v-for="option in operators.BOOLEAN" v-bind:value="option" v-bind:key="option">{{option}}</option>
                 </select>
               </div>
               <div class="col-sm-7">
-                <select type="text" v-bind:id="index" class="form-control" v-model="rule.value">
+                <select type="text" v-bind:id="index" class="form-control" v-model="rule.value" v-on:change="$emit('change')">
                   <option v-bind:value="true">True</option>
                   <option v-bind:value="false">False</option>
                 </select>
@@ -90,11 +90,11 @@
               <div class="col-2 col-sm-1"><button class="btn btn-outline-danger remove" v-on:click="removeRule(index)">×</button></div>
               <div class="col-sm-2">
                 <select class="form-control mb-2" v-model="rule.operator">
-                  <option v-for="option in operators.LIST" v-bind:value="option" v-bind:key="option">{{option}}</option>
+                  <option v-for="option in operators.LIST" v-bind:value="option" v-bind:key="option" v-on:change="$emit('change')">{{option}}</option>
                 </select>
               </div>
               <div class="col-sm-7">
-                <select type="text" v-bind:id="index" class="form-control" v-model="rule.value">
+                <select type="text" v-bind:id="index" class="form-control" v-model="rule.value" v-on:change="$emit('change')">
                   <option v-for="(option, optionIndex) in fields[rule.field].options" v-value="option" v-bind:key="optionIndex">{{option}}</option>
                 </select>
               </div>
@@ -105,12 +105,12 @@
               <label v-bind:for="index" class="col-10 col-sm-2 col-form-label">{{ getRuleName(rule) }}</label>
               <div class="col-2 col-sm-1"><button class="btn btn-outline-danger remove" v-on:click="removeRule(index)">×</button></div>
               <div class="col-sm-2">
-                <select class="form-control mb-2" v-model="rule.operator">
+                <select class="form-control mb-2" v-model="rule.operator" v-on:change="$emit('change')">
                   <option v-for="option in operators.DEFAULT" v-bind:value="option" v-bind:key="option">{{option}}</option>
                 </select>
               </div>
               <div class="col-sm-7">
-                <input type="text" class="form-control" v-bind:id="index" v-model="rule.value">
+                <input type="text" class="form-control" v-bind:id="index" v-model="rule.value" v-on:change="$emit('change')">
               </div>
             </div>
             
@@ -197,11 +197,13 @@ export default {
           value: '',
           operator: '='
         });
+        this.$emit('change');
       }
       return;
     },
     removeRule(rule) {
       this.value.rules.splice(rule, 1);
+      this.$emit('change', 'removed');
       return;
     }
   }
